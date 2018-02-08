@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    private static List<AbstractTest> tasksList = new ArrayList();
+    private static List<AbstractTest> tasksList = new ArrayList<AbstractTest>();
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-        initializeList(searchClasses("src/com/lv297java/hometask1/tasks"));
+        initializeList(searchClasses("srs/com/lv297java/hometask1/tasks"));
         start();
     }
 
@@ -47,7 +47,7 @@ public class Main {
         if(file.isDirectory()) {
             File[] result = file.listFiles();
             for(File item: result) {
-                String temp = item.getPath().replace('\\', '.').replace("src.", "").replace(".java", "");
+                String temp = item.getPath().replace('\\', '.').replace("src.", "").replace(".java", "").replace(".class", "");
                 list.add(temp);
             }
         }
@@ -56,8 +56,8 @@ public class Main {
 
     private static void initializeList(List<String> list) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException{
         for(String item : list) {
-            Class a = Class.forName(item);
-            tasksList.add((AbstractTest) a.getDeclaredConstructor().newInstance());
+            Class a = ClassLoader.getSystemClassLoader().loadClass(item);
+            tasksList.add((AbstractTest) a.getConstructor().newInstance());
         }
 
     }
